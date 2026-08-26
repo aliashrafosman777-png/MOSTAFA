@@ -1,0 +1,266 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════
+   DESIGN TOKENS — Cinematic Aviation Luxury
+   ═══════════════════════════════════════════════════ */
+
+@theme {
+  /* Color Tokens */
+  --color-carbon: #020504;
+  --color-obsidian: #060A08;
+  --color-flight-950: #07140D;
+  --color-flight-900: #0B2116;
+  --color-flight-800: #133522;
+  --color-sage: #7E9881;
+  --color-runway: #A8C39E;
+  --color-mist: #DCE3DD;
+  --color-ivory: #F3F1EA;
+  --color-white: #FCFDFC;
+  --color-line: rgba(220, 227, 221, 0.16);
+
+  /* Typography Scale */
+  --font-family-display: 'Manrope', sans-serif;
+  --font-family-serif: 'Cormorant Garamond', serif;
+
+  /* Custom easing */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Spacing extensions for editorial layout */
+  --spacing-18: 4.5rem;
+  --spacing-22: 5.5rem;
+  --spacing-26: 6.5rem;
+  --spacing-30: 7.5rem;
+  --spacing-34: 8.5rem;
+  --spacing-38: 9.5rem;
+}
+
+/* ═══════════════════════════════════════════════════
+   BASE STYLES
+   ═══════════════════════════════════════════════════ */
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  font-family: var(--font-family-display);
+  background-color: var(--color-carbon);
+  color: var(--color-white);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════════════════
+   FILM GRAIN OVERLAY
+   ═══════════════════════════════════════════════════ */
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ═══════════════════════════════════════════════════
+   SELECTION
+   ═══════════════════════════════════════════════════ */
+
+::selection {
+  background-color: var(--color-flight-800);
+  color: var(--color-white);
+}
+
+/* ═══════════════════════════════════════════════════
+   FOCUS STYLES — Runway Glow
+   ═══════════════════════════════════════════════════ */
+
+*:focus-visible {
+  outline: 2px solid var(--color-runway);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ═══════════════════════════════════════════════════
+   TYPOGRAPHY UTILITIES
+   ═══════════════════════════════════════════════════ */
+
+.text-display-xl {
+  font-family: var(--font-family-display);
+  font-size: clamp(2.5rem, 5vw + 1rem, 5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.text-display-lg {
+  font-family: var(--font-family-display);
+  font-size: clamp(2rem, 3.5vw + 0.5rem, 3.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+.text-display-md {
+  font-family: var(--font-family-display);
+  font-size: clamp(1.5rem, 2.5vw + 0.5rem, 2.5rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.text-editorial {
+  font-family: var(--font-family-serif);
+  font-size: clamp(1.5rem, 3vw + 0.5rem, 2.75rem);
+  font-weight: 400;
+  line-height: 1.3;
+  font-style: italic;
+}
+
+.text-label {
+  font-family: var(--font-family-display);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-sage);
+}
+
+.text-body {
+  font-family: var(--font-family-display);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-mist);
+  max-width: 65ch;
+}
+
+.text-body-lg {
+  font-family: var(--font-family-display);
+  font-size: clamp(1.05rem, 1.2vw, 1.2rem);
+  line-height: 1.7;
+  color: var(--color-mist);
+  max-width: 60ch;
+}
+
+/* ═══════════════════════════════════════════════════
+   LAYOUT UTILITIES
+   ═══════════════════════════════════════════════════ */
+
+.section-padding {
+  padding-top: clamp(5rem, 10vh, 8rem);
+  padding-bottom: clamp(5rem, 10vh, 8rem);
+}
+
+.container-site {
+  width: 100%;
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(1.125rem, 4vw, 4.5rem);
+  padding-right: clamp(1.125rem, 4vw, 4.5rem);
+}
+
+/* ═══════════════════════════════════════════════════
+   LINE SEPARATOR
+   ═══════════════════════════════════════════════════ */
+
+.line-separator {
+  height: 1px;
+  background: var(--color-line);
+  width: 100%;
+}
+
+/* ═══════════════════════════════════════════════════
+   RUNWAY LINE MOTIF
+   ═══════════════════════════════════════════════════ */
+
+.runway-line {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-runway) 20%,
+    var(--color-sage) 50%,
+    var(--color-runway) 80%,
+    transparent 100%
+  );
+  opacity: 0.4;
+}
+
+/* ═══════════════════════════════════════════════════
+   ATMOSPHERIC GLOW
+   ═══════════════════════════════════════════════════ */
+
+.glow-green {
+  background: radial-gradient(
+    ellipse at 70% 50%,
+    var(--color-flight-900) 0%,
+    transparent 70%
+  );
+}
+
+.glow-green-subtle {
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    var(--color-flight-950) 0%,
+    transparent 60%
+  );
+}
+
+/* ═══════════════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════════════ */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-carbon);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-flight-800);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-sage);
+}
+
+/* ═══════════════════════════════════════════════════
+   BODY SCROLL LOCK (for mobile menu)
+   ═══════════════════════════════════════════════════ */
+
+body.menu-open {
+  overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════════════
+   NAVBAR LINK UNDERLINE ANIMATION
+   ═══════════════════════════════════════════════════ */
+
+.nav-link-capsule:hover span {
+  width: 100% !important;
+}
