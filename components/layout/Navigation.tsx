@@ -68,130 +68,123 @@ export default function Navigation() {
         style={{ transitionTimingFunction: 'var(--ease-out-expo)' }}
       >
         <nav
-          className={`transition-all duration-500 rounded-full border backdrop-blur-[25px] backdrop-saturate-[180%] ${
+          className={`relative transition-all duration-500 rounded-full border backdrop-blur-[25px] backdrop-saturate-[180%] ${
             isScrolled
               ? 'px-6 sm:px-8 md:px-10 py-2.5 md:py-3 bg-carbon/85 border-white/10 shadow-[0_15px_35px_rgba(0,0,0,0.4)]'
               : 'px-7 sm:px-9 md:px-11 py-3 md:py-3.5 bg-carbon/65 border-white/12 shadow-[0_20px_45px_rgba(2,5,4,0.25)]'
           }`}
-          style={{
-            transitionTimingFunction: 'var(--ease-out-expo)',
-            display: 'grid',
-            gridTemplateColumns: '1fr auto 1fr',
-            alignItems: 'center',
-            width: '100%',
-          }}
+          style={{ transitionTimingFunction: 'var(--ease-out-expo)' }}
           aria-label="Main navigation"
         >
-          {/* Left Group: Home, Work, Services */}
-          <div className="flex items-center">
-            <div className="hidden lg:flex items-center gap-7 xl:gap-9 justify-start">
-              {navLinks.map((link) => (
+          {/* Flex container for left + right groups */}
+          <div className="flex items-center justify-between">
+            {/* Left Group: Home, Work, Services */}
+            <div className="flex items-center">
+              <div className="hidden lg:flex items-center gap-7 xl:gap-9">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`nav-link-capsule relative text-[0.72rem] font-semibold tracking-[0.14em] uppercase py-1 transition-colors duration-300 ${
+                      isActive(link.href)
+                        ? 'text-white'
+                        : 'text-ivory/75 hover:text-white'
+                    }`}
+                    {...(isActive(link.href) && { 'aria-current': 'page' as const })}
+                  >
+                    {link.label}
+                    <span
+                      className={`absolute bottom-[-2px] left-0 h-[1.5px] bg-runway transition-all duration-300 ease-[var(--ease-out-expo)] ${
+                        isActive(link.href) ? 'w-full' : 'w-0'
+                      }`}
+                    />
+                  </Link>
+                ))}
+              </div>
+              {/* Mobile balance spacer */}
+              <div className="lg:hidden w-8" aria-hidden="true" />
+            </div>
+
+            {/* Right Group: About + Contact Pill Button + Mobile Toggle */}
+            <div className="flex items-center">
+              <div className="hidden lg:flex items-center gap-7 xl:gap-8">
+                {navLinksRight.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`nav-link-capsule relative text-[0.72rem] font-semibold tracking-[0.14em] uppercase py-1 transition-colors duration-300 ${
+                      isActive(link.href)
+                        ? 'text-white'
+                        : 'text-ivory/75 hover:text-white'
+                    }`}
+                    {...(isActive(link.href) && { 'aria-current': 'page' as const })}
+                  >
+                    {link.label}
+                    <span
+                      className={`absolute bottom-[-2px] left-0 h-[1.5px] bg-runway transition-all duration-300 ease-[var(--ease-out-expo)] ${
+                        isActive(link.href) ? 'w-full' : 'w-0'
+                      }`}
+                    />
+                  </Link>
+                ))}
                 <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`nav-link-capsule relative text-[0.72rem] font-semibold tracking-[0.14em] uppercase py-1 transition-colors duration-300 ${
-                    isActive(link.href)
-                      ? 'text-white'
-                      : 'text-ivory/75 hover:text-white'
+                  href="/contact"
+                  className={`text-[0.72rem] font-semibold tracking-[0.14em] uppercase px-5 py-2 border rounded-full transition-all duration-300 ${
+                    isActive('/contact')
+                      ? 'border-white/40 text-white bg-white/10 shadow-[0_0_12px_rgba(255,255,255,0.1)]'
+                      : 'border-white/20 text-ivory/90 hover:border-white/40 hover:text-white hover:bg-white/5'
                   }`}
-                  {...(isActive(link.href) && { 'aria-current': 'page' as const })}
+                  {...(isActive('/contact') && { 'aria-current': 'page' as const })}
                 >
-                  {link.label}
-                  {/* Animated underline */}
-                  <span
-                    className={`absolute bottom-[-2px] left-0 h-[1.5px] bg-runway transition-all duration-300 ease-[var(--ease-out-expo)] ${
-                      isActive(link.href) ? 'w-full' : 'w-0'
-                    }`}
-                  />
+                  Contact
                 </Link>
-              ))}
-            </div>
-            {/* Mobile balance spacer */}
-            <div className="lg:hidden w-8" aria-hidden="true" />
-          </div>
+              </div>
 
-          {/* Center: Mathematically Centered Prominent Logo Wordmark */}
-          <div className="flex items-center justify-center">
-            <Link
-              href="/"
-              className="flex items-center justify-center group py-0.5"
-              aria-label="Mostafa Ahmed — Home"
-            >
-              <Image
-                src="/assets/brand/mostafa-logo-nav.png"
-                alt="Mostafa Ahmed — Marketing Travel Consultant"
-                width={754}
-                height={242}
-                className="h-10 sm:h-11 md:h-13 lg:h-14 w-auto max-w-[210px] md:max-w-[260px] transition-transform duration-300 group-hover:scale-[1.02]"
-                priority
-              />
-            </Link>
-          </div>
-
-          {/* Right Group: About + Contact Pill Button + Mobile Toggle */}
-          <div className="flex items-center justify-end">
-            <div className="hidden lg:flex items-center gap-7 xl:gap-8 justify-end">
-              {navLinksRight.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`nav-link-capsule relative text-[0.72rem] font-semibold tracking-[0.14em] uppercase py-1 transition-colors duration-300 ${
-                    isActive(link.href)
-                      ? 'text-white'
-                      : 'text-ivory/75 hover:text-white'
-                  }`}
-                  {...(isActive(link.href) && { 'aria-current': 'page' as const })}
+              {/* Mobile: Hamburger Toggle */}
+              <div className="lg:hidden flex items-center">
+                <button
+                  className="p-2 -mr-1 text-white hover:text-runway transition-colors focus-visible:outline-none"
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  aria-expanded={isMobileMenuOpen}
+                  aria-controls="mobile-menu"
+                  aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
                 >
-                  {link.label}
-                  <span
-                    className={`absolute bottom-[-2px] left-0 h-[1.5px] bg-runway transition-all duration-300 ease-[var(--ease-out-expo)] ${
-                      isActive(link.href) ? 'w-full' : 'w-0'
-                    }`}
-                  />
-                </Link>
-              ))}
-              <Link
-                href="/contact"
-                className={`text-[0.72rem] font-semibold tracking-[0.14em] uppercase px-5 py-2 border rounded-full transition-all duration-300 ${
-                  isActive('/contact')
-                    ? 'border-white/40 text-white bg-white/10 shadow-[0_0_12px_rgba(255,255,255,0.1)]'
-                    : 'border-white/20 text-ivory/90 hover:border-white/40 hover:text-white hover:bg-white/5'
-                }`}
-                {...(isActive('/contact') && { 'aria-current': 'page' as const })}
-              >
-                Contact
-              </Link>
-            </div>
-
-            {/* Mobile: Hamburger Toggle */}
-            <div className="lg:hidden flex items-center justify-end">
-              <button
-                className="p-2 -mr-1 text-white hover:text-runway transition-colors focus-visible:outline-none"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                aria-expanded={isMobileMenuOpen}
-                aria-controls="mobile-menu"
-                aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-              >
-                <div className="w-5 flex flex-col gap-[5px]">
-                  <span
-                    className={`block h-[1.5px] bg-current transition-all duration-300 origin-center ${
-                      isMobileMenuOpen ? 'rotate-45 translate-y-[6.5px]' : ''
-                    }`}
-                  />
-                  <span
-                    className={`block h-[1.5px] bg-current transition-all duration-300 ${
-                      isMobileMenuOpen ? 'opacity-0 scale-x-0' : ''
-                    }`}
-                  />
-                  <span
-                    className={`block h-[1.5px] bg-current transition-all duration-300 origin-center ${
-                      isMobileMenuOpen ? '-rotate-45 -translate-y-[6.5px]' : ''
-                    }`}
-                  />
-                </div>
-              </button>
+                  <div className="w-5 flex flex-col gap-[5px]">
+                    <span
+                      className={`block h-[1.5px] bg-current transition-all duration-300 origin-center ${
+                        isMobileMenuOpen ? 'rotate-45 translate-y-[6.5px]' : ''
+                      }`}
+                    />
+                    <span
+                      className={`block h-[1.5px] bg-current transition-all duration-300 ${
+                        isMobileMenuOpen ? 'opacity-0 scale-x-0' : ''
+                      }`}
+                    />
+                    <span
+                      className={`block h-[1.5px] bg-current transition-all duration-300 origin-center ${
+                        isMobileMenuOpen ? '-rotate-45 -translate-y-[6.5px]' : ''
+                      }`}
+                    />
+                  </div>
+                </button>
+              </div>
             </div>
           </div>
+
+          {/* Logo — absolutely centered in navbar, independent of left/right groups */}
+          <Link
+            href="/"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 flex items-center justify-center group"
+            aria-label="Mostafa Ahmed — Home"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/assets/brand/mostafa-logo-nav.png"
+              alt="Mostafa Ahmed — Marketing Travel Consultant"
+              style={{ height: 'clamp(30px, 3.5vw, 44px)', width: 'auto' }}
+              className="transition-transform duration-300 group-hover:scale-[1.02]"
+            />
+          </Link>
         </nav>
       </header>
 

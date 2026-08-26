@@ -15,6 +15,8 @@ export default function Home() {
       <PositioningStatement />
       <FeaturedWork />
 
+      <MeetTheBranding />
+
       {/* Services Preview — links to /services */}
       <section className="section-padding bg-obsidian relative">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-flight-950/50 to-transparent pointer-events-none" aria-hidden="true" />
@@ -65,8 +67,6 @@ export default function Home() {
           </RevealOnScroll>
         </div>
       </section>
-
-      <MeetTheBranding />
 
       {/* Founder Preview — links to /about */}
       <section className="section-padding relative overflow-hidden">

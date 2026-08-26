@@ -84,23 +84,11 @@ export default function Hero() {
                 Start a conversation
               </Link>
             </motion.div>
-
-            <motion.div
-              className="flex items-center gap-3"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.7, delay: 0.9, ease: EASE_OUT_EXPO }}
-            >
-              <div className="w-8 h-[1px] bg-runway/60" />
-              <p className="text-sm text-sage tracking-wide">
-                Mostafa Ahmed — Marketing Travel Consultant
-              </p>
-            </motion.div>
           </div>
 
           {/* Founder Portrait — seamless luxury presentation */}
           <motion.div
-            className="lg:col-span-5 xl:col-span-6 relative flex justify-center lg:justify-end"
+            className="lg:col-span-5 xl:col-span-6 relative flex flex-col items-center lg:items-end"
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.3, ease: EASE_OUT_EXPO }}
@@ -130,6 +118,19 @@ export default function Hero() {
                 />
               </div>
             </div>
+
+            {/* Tagline under the portrait */}
+            <motion.div
+              className="flex items-center gap-3 mt-5"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.9, ease: EASE_OUT_EXPO }}
+            >
+              <div className="w-8 h-[1px] bg-runway/60" />
+              <p className="text-sm text-sage tracking-wide">
+                Mostafa Ahmed — Marketing Travel Consultant
+              </p>
+            </motion.div>
           </motion.div>
         </div>
       </div>
