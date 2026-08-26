@@ -70,8 +70,8 @@ export default function Navigation() {
         <nav
           className={`transition-all duration-500 rounded-full border backdrop-blur-[25px] backdrop-saturate-[180%] ${
             isScrolled
-              ? 'px-5 sm:px-6 md:px-8 py-2 md:py-2.5 bg-carbon/80 border-white/10 shadow-[0_15px_35px_rgba(0,0,0,0.4)]'
-              : 'px-6 sm:px-7 md:px-9 py-2.5 md:py-3 bg-carbon/60 border-white/12 shadow-[0_20px_45px_rgba(2,5,4,0.25)]'
+              ? 'px-6 sm:px-8 md:px-10 py-2.5 md:py-3 bg-carbon/85 border-white/10 shadow-[0_15px_35px_rgba(0,0,0,0.4)]'
+              : 'px-7 sm:px-9 md:px-11 py-3 md:py-3.5 bg-carbon/65 border-white/12 shadow-[0_20px_45px_rgba(2,5,4,0.25)]'
           }`}
           style={{
             transitionTimingFunction: 'var(--ease-out-expo)',
@@ -110,7 +110,7 @@ export default function Navigation() {
             <div className="lg:hidden w-8" aria-hidden="true" />
           </div>
 
-          {/* Center: Mathematically Centered Logo Wordmark */}
+          {/* Center: Mathematically Centered Prominent Logo Wordmark */}
           <div className="flex items-center justify-center">
             <Link
               href="/"
@@ -122,7 +122,7 @@ export default function Navigation() {
                 alt="Mostafa Ahmed — Marketing Travel Consultant"
                 width={754}
                 height={242}
-                className="h-8 sm:h-9 md:h-10 w-auto transition-transform duration-300 group-hover:scale-[1.02]"
+                className="h-10 sm:h-11 md:h-13 lg:h-14 w-auto max-w-[210px] md:max-w-[260px] transition-transform duration-300 group-hover:scale-[1.02]"
                 priority
               />
             </Link>
