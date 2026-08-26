@@ -155,8 +155,8 @@ export default function AboutPage() {
       <section className="section-padding bg-obsidian">
         <div className="container-site">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-            {/* Left: Video (7 columns on desktop) */}
-            <RevealOnScroll className="lg:col-span-7" direction="left">
+            {/* Left: Video (properly sized for 9:16 vertical showreel) */}
+            <RevealOnScroll className="lg:col-span-5 xl:col-span-5 mx-auto lg:mx-0 w-full max-w-sm sm:max-w-md" direction="left">
               <VideoPlayer
                 src="/assets/video/travel-marketing.mp4"
                 poster="/assets/video/travel-marketing-poster.jpg"
@@ -164,10 +164,10 @@ export default function AboutPage() {
               />
             </RevealOnScroll>
 
-            {/* Right: Quote + CTA (5 columns on desktop) */}
-            <div className="lg:col-span-5">
+            {/* Right: Quote + CTA */}
+            <div className="lg:col-span-7 xl:col-span-7">
               <RevealOnScroll direction="right" delay={0.15}>
-                <blockquote className="text-editorial text-ivory mb-10 max-w-md">
+                <blockquote className="text-editorial text-ivory mb-10 max-w-lg">
                   Watch how strategy, story, and experience come together to
                   take travel marketing beyond visibility.
                 </blockquote>

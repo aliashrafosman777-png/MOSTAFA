@@ -39,9 +39,9 @@ export default function VideoPlayer({ src, poster, ariaLabel = 'Travel marketing
   };
 
   return (
-    <div className="relative rounded-sm overflow-hidden border border-line shadow-[0_8px_40px_rgba(0,0,0,0.4)]">
+    <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-[0_12px_50px_rgba(0,0,0,0.5)] bg-flight-950">
       <div
-        className="absolute -inset-4 bg-gradient-to-br from-flight-900/30 via-transparent to-flight-950/20 rounded-lg blur-2xl pointer-events-none"
+        className="absolute -inset-4 bg-gradient-to-br from-flight-900/30 via-transparent to-flight-950/20 rounded-2xl blur-2xl pointer-events-none"
         aria-hidden="true"
       />
       <video
@@ -51,17 +51,17 @@ export default function VideoPlayer({ src, poster, ariaLabel = 'Travel marketing
         loop
         muted
         playsInline
-        preload="none"
+        preload="metadata"
         aria-label={ariaLabel}
-        className="relative w-full h-auto block"
-        style={{ objectFit: 'contain' }}
+        className="relative w-full h-auto block rounded-2xl"
+        style={{ objectFit: 'cover' }}
       />
 
       {/* Unmute / Mute button */}
       <button
         onClick={toggleMute}
         aria-label={isMuted ? 'Unmute video' : 'Mute video'}
-        className="absolute bottom-4 right-4 z-10 flex items-center gap-2 px-3 py-2 rounded-full bg-carbon/70 border border-white/15 backdrop-blur-sm hover:bg-carbon/90 transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-runway"
+        className="absolute bottom-4 right-4 z-10 flex items-center gap-2 px-3.5 py-2 rounded-full bg-carbon/80 border border-white/15 backdrop-blur-md hover:bg-carbon transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-runway shadow-lg"
       >
         {isMuted ? (
           <>
@@ -69,7 +69,7 @@ export default function VideoPlayer({ src, poster, ariaLabel = 'Travel marketing
               <path strokeLinecap="round" strokeLinejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707A1 1 0 0112 5v14a1 1 0 01-1.707.707L5.586 15z" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
             </svg>
-            <span className="text-[10px] font-semibold tracking-wider uppercase text-white/80">Tap for sound</span>
+            <span className="text-[10px] font-semibold tracking-wider uppercase text-white/90">Tap for sound</span>
           </>
         ) : (
           <>

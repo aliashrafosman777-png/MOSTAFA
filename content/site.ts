@@ -25,5 +25,5 @@ export const navLinks = [
 
 export const navLinksRight = [
   { label: 'About', href: '/about' },
-  { label: 'Contact', href: '/contact' },
 ];
+

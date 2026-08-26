@@ -98,32 +98,37 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* Founder Portrait — preserves original 1080×1350 ratio */}
+          {/* Founder Portrait — seamless luxury presentation */}
           <motion.div
-            className="lg:col-span-5 xl:col-span-6 relative"
-            initial={{ opacity: 0, scale: 0.97 }}
+            className="lg:col-span-5 xl:col-span-6 relative flex justify-center lg:justify-end"
+            initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.3, ease: EASE_OUT_EXPO }}
           >
-            <div className="relative max-w-md lg:max-w-lg mx-auto lg:ml-auto">
+            <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg">
+              {/* Soft ambient background glow */}
               <div
-                className="absolute -inset-8 bg-gradient-to-t from-flight-900/50 via-flight-950/30 to-transparent rounded-full blur-3xl"
+                className="absolute -inset-6 bg-gradient-to-tr from-flight-900/40 via-flight-950/20 to-transparent rounded-3xl blur-3xl pointer-events-none"
                 aria-hidden="true"
               />
-              <Image
-                src="/assets/brand/mostafa-portrait.jpg"
-                alt="Mostafa Ahmed — Marketing Travel Consultant, wearing a tailored black double-breasted blazer with a confident stance"
-                width={1080}
-                height={1350}
-                sizes="(max-width: 768px) 90vw, (max-width: 1024px) 50vw, 40vw"
-                className="relative w-full h-auto rounded-sm"
-                priority
-              />
-              {/* Subtle gradient overlay at bottom */}
-              <div
-                className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-carbon to-transparent pointer-events-none"
-                aria-hidden="true"
-              />
+
+              {/* Luxury framed card with smooth rounded corners on all 4 sides */}
+              <div className="relative rounded-2xl md:rounded-3xl overflow-hidden border border-white/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.6)] bg-carbon">
+                <Image
+                  src="/assets/brand/mostafa-portrait.jpg"
+                  alt="Mostafa Ahmed — Marketing Travel Consultant, wearing a tailored black double-breasted blazer"
+                  width={1080}
+                  height={1350}
+                  sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 38vw"
+                  className="w-full h-auto object-cover object-top block"
+                  priority
+                />
+                {/* Subtle vignette blend at bottom contained cleanly within rounded card */}
+                <div
+                  className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-carbon/80 via-carbon/20 to-transparent pointer-events-none"
+                  aria-hidden="true"
+                />
+              </div>
             </div>
           </motion.div>
         </div>
