@@ -11,6 +11,8 @@ A production-ready Next.js website with a Resend-backed contact workflow and pro
 - Protected admin session with HTTP-only cookies
 - In-dashboard client replies sent through Resend
 - Optimized Next.js images, lazy video loading, compression, and asset caching
+- Consent-based Meta Pixel page-view and successful-lead tracking
+- Privacy notice, cookie choice, and Global Privacy Control support
 
 ## Environment variables
 
@@ -24,6 +26,7 @@ Copy `.env.example` to `.env.local` and set every value. Never commit `.env.loca
 | `ADMIN_EMAIL` | Admin dashboard login email |
 | `ADMIN_PASSWORD` | Admin dashboard login password |
 | `ADMIN_SESSION_SECRET` | Random secret of at least 32 characters used to sign admin sessions |
+| `NEXT_PUBLIC_META_PIXEL_ID` | Numeric Meta Pixel ID; leave unset to disable the Pixel and cookie banner |
 
 Set the same variables in the production hosting provider before deployment.
 

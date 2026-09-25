@@ -5,6 +5,7 @@ import { siteConfig } from '@/content/site';
 import { contactSchema, projectTypes } from '@/lib/validation';
 import type { ContactResponse } from '@/types';
 import RevealOnScroll from '@/components/motion/RevealOnScroll';
+import { trackMetaEvent } from '@/lib/meta-pixel';
 
 interface FormErrors {
   name?: string[];
@@ -81,6 +82,10 @@ export default function ContactCTA() {
         } else if (data.success) {
           setStatus('success');
           setServerMessage(data.message);
+          trackMetaEvent('Lead', {
+            content_name: 'Contact form',
+            content_category: formData.projectType,
+          });
           setFormData({
             name: '',
             company: '',

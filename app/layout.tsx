@@ -3,6 +3,8 @@ import { Manrope, Cormorant_Garamond } from 'next/font/google';
 import './globals.css';
 import { siteConfig } from '@/content/site';
 import SiteShell from '@/components/layout/SiteShell';
+import MetaPixel from '@/components/analytics/MetaPixel';
+import CookieConsent from '@/components/privacy/CookieConsent';
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -83,6 +85,8 @@ export default function RootLayout({
       </head>
       <body className="font-[family-name:var(--font-manrope)]">
         <SiteShell>{children}</SiteShell>
+        <MetaPixel />
+        <CookieConsent />
       </body>
     </html>
   );

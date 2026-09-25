@@ -3,7 +3,6 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import sharp from 'sharp';
 
 const execFileAsync = promisify(execFile);
 const OWNER_ROOT = 'D:\\MOSTAFA.P';

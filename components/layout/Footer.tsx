@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { siteConfig, navLinks, navLinksRight } from '@/content/site';
+import CookieSettingsButton from '@/components/privacy/CookieSettingsButton';
 
 export default function Footer() {
   const allLinks = [...navLinks, ...navLinksRight];
@@ -54,7 +55,14 @@ export default function Footer() {
           <p className="text-xs text-sage">
             © {new Date().getFullYear()} Mostafa Ahmed. All rights reserved.
           </p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <Link
+              href="/privacy"
+              className="text-xs text-sage transition-colors hover:text-white"
+            >
+              Privacy &amp; cookies
+            </Link>
+            <CookieSettingsButton />
             <a
               href="https://www.facebook.com/Mostafatourism1"
               target="_blank"
