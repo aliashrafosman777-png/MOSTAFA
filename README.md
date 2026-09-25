@@ -26,7 +26,7 @@ Copy `.env.example` to `.env.local` and set every value. Never commit `.env.loca
 | `ADMIN_EMAIL` | Admin dashboard login email |
 | `ADMIN_PASSWORD` | Admin dashboard login password |
 | `ADMIN_SESSION_SECRET` | Random secret of at least 32 characters used to sign admin sessions |
-| `NEXT_PUBLIC_META_PIXEL_ID` | Numeric Meta Pixel ID; leave unset to disable the Pixel and cookie banner |
+| `NEXT_PUBLIC_META_PIXEL_ID` | Optional override for the public numeric Meta Pixel ID configured for this website |
 
 Set the same variables in the production hosting provider before deployment.
 

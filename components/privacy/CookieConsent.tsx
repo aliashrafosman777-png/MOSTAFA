@@ -5,13 +5,11 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import {
   getMarketingConsent,
+  HAS_VALID_META_PIXEL_ID,
   OPEN_COOKIE_SETTINGS_EVENT,
   saveMarketingConsent,
   type MarketingConsent,
 } from '@/lib/meta-pixel';
-
-const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim() ?? '';
-const hasValidPixelId = /^\d+$/.test(pixelId);
 
 export default function CookieConsent() {
   const pathname = usePathname();
@@ -30,7 +28,7 @@ export default function CookieConsent() {
     };
   }, []);
 
-  if (!hasValidPixelId || pathname.startsWith('/admin') || !visible) return null;
+  if (!HAS_VALID_META_PIXEL_ID || pathname.startsWith('/admin') || !visible) return null;
 
   const choose = (choice: MarketingConsent) => {
     saveMarketingConsent(choice);

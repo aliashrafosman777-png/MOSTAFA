@@ -5,12 +5,11 @@ import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   getMarketingConsent,
+  HAS_VALID_META_PIXEL_ID,
   META_CONSENT_EVENT,
+  META_PIXEL_ID,
   type MarketingConsent,
 } from '@/lib/meta-pixel';
-
-const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim() ?? '';
-const hasValidPixelId = /^\d+$/.test(pixelId);
 
 function prepareMetaQueue() {
   if (window.fbq) return;
@@ -55,7 +54,7 @@ export default function MetaPixel() {
   }, []);
 
   useEffect(() => {
-    if (consent !== 'accepted' || !hasValidPixelId) return;
+    if (consent !== 'accepted' || !HAS_VALID_META_PIXEL_ID) return;
     prepareMetaQueue();
     const readyTimer = window.setTimeout(() => setQueueReady(true), 0);
     return () => window.clearTimeout(readyTimer);
@@ -73,7 +72,7 @@ export default function MetaPixel() {
     }
 
     if (!initialized.current) {
-      window.fbq('init', pixelId);
+      window.fbq('init', META_PIXEL_ID);
       window.fbq('consent', 'grant');
       initialized.current = true;
     }

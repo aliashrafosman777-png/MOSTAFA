@@ -1,9 +1,12 @@
 'use client';
 
-import { OPEN_COOKIE_SETTINGS_EVENT } from '@/lib/meta-pixel';
+import {
+  HAS_VALID_META_PIXEL_ID,
+  OPEN_COOKIE_SETTINGS_EVENT,
+} from '@/lib/meta-pixel';
 
 export default function CookieSettingsButton() {
-  if (!/^\d+$/.test(process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim() ?? '')) {
+  if (!HAS_VALID_META_PIXEL_ID) {
     return null;
   }
 

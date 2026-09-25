@@ -1,5 +1,10 @@
 'use client';
 
+// Meta Pixel IDs are public website identifiers, not secret credentials.
+// The environment variable can override this value for another deployment.
+export const META_PIXEL_ID =
+  process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim() || '24720434197626004';
+export const HAS_VALID_META_PIXEL_ID = /^\d+$/.test(META_PIXEL_ID);
 export const META_CONSENT_STORAGE_KEY = 'mostafa-marketing-consent';
 export const META_CONSENT_EVENT = 'mostafa:marketing-consent';
 export const OPEN_COOKIE_SETTINGS_EVENT = 'mostafa:open-cookie-settings';
