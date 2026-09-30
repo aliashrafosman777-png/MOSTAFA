@@ -10,6 +10,8 @@ import { trackMetaEvent } from '@/lib/meta-pixel';
 interface FormErrors {
   name?: string[];
   company?: string[];
+  position?: string[];
+  phone?: string[];
   email?: string[];
   projectType?: string[];
   message?: string[];
@@ -19,6 +21,8 @@ export default function ContactCTA() {
   const [formData, setFormData] = useState({
     name: '',
     company: '',
+    position: '',
+    phone: '',
     email: '',
     projectType: '',
     message: '',
@@ -89,6 +93,8 @@ export default function ContactCTA() {
           setFormData({
             name: '',
             company: '',
+            position: '',
+            phone: '',
             email: '',
             projectType: '',
             message: '',
@@ -245,6 +251,63 @@ export default function ContactCTA() {
                   {errors.company && (
                     <p id="company-error" className="text-xs text-red-400 mt-1.5" role="alert">
                       {errors.company[0]}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Position */}
+                <div>
+                  <label
+                    htmlFor="position"
+                    className="block text-sm text-mist mb-2"
+                  >
+                    Position
+                  </label>
+                  <input
+                    type="text"
+                    id="position"
+                    name="position"
+                    value={formData.position}
+                    onChange={handleChange}
+                    className={inputClasses}
+                    placeholder="Your position"
+                    autoComplete="organization-title"
+                    aria-invalid={!!errors.position}
+                    aria-describedby={errors.position ? 'position-error' : undefined}
+                  />
+                  {errors.position && (
+                    <p id="position-error" className="text-xs text-red-400 mt-1.5" role="alert">
+                      {errors.position[0]}
+                    </p>
+                  )}
+                </div>
+
+                {/* Phone */}
+                <div>
+                  <label
+                    htmlFor="phone"
+                    className="block text-sm text-mist mb-2"
+                  >
+                    Phone number
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className={inputClasses}
+                    placeholder="+20 100 000 0000"
+                    autoComplete="tel"
+                    inputMode="tel"
+                    aria-invalid={!!errors.phone}
+                    aria-describedby={errors.phone ? 'phone-error' : undefined}
+                  />
+                  {errors.phone && (
+                    <p id="phone-error" className="text-xs text-red-400 mt-1.5" role="alert">
+                      {errors.phone[0]}
                     </p>
                   )}
                 </div>

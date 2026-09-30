@@ -34,7 +34,8 @@ export default function PrivacyPage() {
               <p className="text-body mb-4">
                 If you select Accept, the website loads the Meta Pixel. It records page views
                 and a Lead event after a contact form is successfully sent. We do not send the
-                name, email address, company, or message entered in the form to the Pixel.
+                name, email address, phone number, position, company, or message entered in the
+                form to the Pixel.
               </p>
               <p className="text-body">
                 The Pixel remains disabled if you decline, have Global Privacy Control enabled,

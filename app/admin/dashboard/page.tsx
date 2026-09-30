@@ -8,6 +8,8 @@ interface Message {
   id: string;
   name: string;
   company: string;
+  position: string;
+  phone: string;
   email: string;
   projectType: string;
   message: string;
@@ -278,8 +280,10 @@ export default function AdminDashboard() {
                       <div className="py-10 text-center text-sm text-sage">Loading message…</div>
                     ) : (
                       <>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
                       <div><p className="text-xs text-sage uppercase mb-1">Email</p><a href={`mailto:${message.email}`} className="text-sm text-runway hover:underline">{message.email}</a></div>
+                      <div><p className="text-xs text-sage uppercase mb-1">Phone</p>{message.phone ? <a href={`tel:${message.phone.replace(/[^\d+]/g, '')}`} className="text-sm text-runway hover:underline">{message.phone}</a> : <p className="text-sm text-sage">—</p>}</div>
+                      <div><p className="text-xs text-sage uppercase mb-1">Position</p><p className="text-sm text-mist">{message.position || '—'}</p></div>
                       <div><p className="text-xs text-sage uppercase mb-1">Received</p><p className="text-sm text-mist">{new Date(message.createdAt).toLocaleString()}</p></div>
                     </div>
                     <div className="p-4 bg-flight-950/80 border border-line rounded-sm mb-5"><p className="text-sm text-mist whitespace-pre-wrap leading-relaxed">{message.message}</p></div>

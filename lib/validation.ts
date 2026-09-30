@@ -9,6 +9,22 @@ export const contactSchema = z.object({
     .string()
     .min(1, 'Company name is required')
     .max(200, 'Company name must be less than 200 characters'),
+  position: z
+    .string()
+    .trim()
+    .min(2, 'Position must be at least 2 characters')
+    .max(100, 'Position must be less than 100 characters'),
+  phone: z
+    .string()
+    .trim()
+    .regex(/^\+?[0-9\s().-]+$/, 'Please enter a valid phone number')
+    .refine(
+      (value) => {
+        const digitCount = value.replace(/\D/g, '').length;
+        return digitCount >= 7 && digitCount <= 15;
+      },
+      'Phone number must contain between 7 and 15 digits'
+    ),
   email: z
     .string()
     .email('Please enter a valid email address'),

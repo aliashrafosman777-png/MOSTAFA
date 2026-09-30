@@ -62,6 +62,8 @@ export interface ExperienceColumn {
 export interface ContactFormData {
   name: string;
   company: string;
+  position: string;
+  phone: string;
   email: string;
   projectType: string;
   message: string;

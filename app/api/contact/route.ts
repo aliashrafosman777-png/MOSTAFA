@@ -39,6 +39,8 @@ export async function POST(request: Request) {
     const emailResult = await saveMessage({
       name: result.data.name,
       company: result.data.company,
+      position: result.data.position,
+      phone: result.data.phone,
       email: result.data.email,
       projectType: result.data.projectType,
       message: result.data.message,

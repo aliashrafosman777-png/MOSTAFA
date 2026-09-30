@@ -13,6 +13,8 @@ export interface ContactMessage {
   id: string;
   name: string;
   company: string;
+  position: string;
+  phone: string;
   email: string;
   projectType: string;
   message: string;
@@ -22,9 +24,11 @@ export interface ContactMessage {
 }
 
 interface ContactMessageData {
-  version: 1;
+  version: 1 | 2;
   name: string;
   company: string;
+  position?: string;
+  phone?: string;
   email: string;
   projectType: string;
   message: string;
@@ -61,7 +65,7 @@ function decodeMessage(html: string): ContactMessageData | null {
     const parsed = JSON.parse(
       Buffer.from(match[1], 'base64url').toString('utf8')
     ) as ContactMessageData;
-    if (parsed.version !== 1 || !parsed.email || !parsed.message) return null;
+    if (![1, 2].includes(parsed.version) || !parsed.email || !parsed.message) return null;
     return parsed;
   } catch {
     return null;
@@ -71,20 +75,25 @@ function decodeMessage(html: string): ContactMessageData | null {
 export async function saveMessage(data: {
   name: string;
   company: string;
+  position: string;
+  phone: string;
   email: string;
   projectType: string;
   message: string;
 }): Promise<{ success: boolean; id?: string; unconfigured?: boolean }> {
   const createdAt = new Date().toISOString();
-  const messageData: ContactMessageData = { version: 1, ...data, createdAt };
+  const messageData: ContactMessageData = { version: 2, ...data, createdAt };
   const encoded = encodeMessage(messageData);
   const safe = {
     name: escapeHtml(data.name),
     company: escapeHtml(data.company),
+    position: escapeHtml(data.position),
+    phone: escapeHtml(data.phone),
     email: escapeHtml(data.email),
     projectType: escapeHtml(data.projectType),
     message: escapeHtml(data.message).replace(/\n/g, '<br>'),
   };
+  const phoneLink = data.phone.replace(/[^\d+]/g, '');
   const inquiryId = crypto.randomUUID();
 
   const result = await sendEmail({
@@ -101,6 +110,8 @@ export async function saveMessage(data: {
       '',
       `Name: ${data.name}`,
       `Company: ${data.company}`,
+      `Position: ${data.position}`,
+      `Phone: ${data.phone}`,
       `Email: ${data.email}`,
       `Project type: ${data.projectType}`,
       '',
@@ -113,6 +124,8 @@ export async function saveMessage(data: {
         <table style="border-collapse:collapse;width:100%;margin-bottom:24px">
           <tr><td style="padding:8px 12px;color:#667085">Name</td><td style="padding:8px 12px"><strong>${safe.name}</strong></td></tr>
           <tr><td style="padding:8px 12px;color:#667085">Company</td><td style="padding:8px 12px">${safe.company}</td></tr>
+          <tr><td style="padding:8px 12px;color:#667085">Position</td><td style="padding:8px 12px">${safe.position}</td></tr>
+          <tr><td style="padding:8px 12px;color:#667085">Phone</td><td style="padding:8px 12px"><a href="tel:${phoneLink}">${safe.phone}</a></td></tr>
           <tr><td style="padding:8px 12px;color:#667085">Email</td><td style="padding:8px 12px"><a href="mailto:${safe.email}">${safe.email}</a></td></tr>
           <tr><td style="padding:8px 12px;color:#667085">Project type</td><td style="padding:8px 12px">${safe.projectType}</td></tr>
         </table>
@@ -133,6 +146,8 @@ async function retrieveMessage(summary: ResendEmailSummary): Promise<ContactMess
     id: summary.id,
     name: parsed.name,
     company: parsed.company,
+    position: parsed.position || '',
+    phone: parsed.phone || '',
     email: parsed.email,
     projectType: parsed.projectType,
     message: parsed.message,
@@ -158,6 +173,8 @@ export async function getMessages(): Promise<ContactMessage[]> {
         id: email.id,
         name: separator >= 0 ? summary.slice(0, separator) : summary,
         company: '',
+        position: '',
+        phone: '',
         email: replyTo,
         projectType: separator >= 0 ? summary.slice(separator + 3) : 'Website inquiry',
         message: '',
