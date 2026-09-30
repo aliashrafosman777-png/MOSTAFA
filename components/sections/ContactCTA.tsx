@@ -123,7 +123,7 @@ export default function ContactCTA() {
   return (
     <section
       id="contact"
-      className="section-padding relative overflow-hidden"
+      className="relative overflow-hidden pb-20 pt-28 sm:pt-32 md:pb-28 md:pt-36"
       aria-label="Contact"
     >
       {/* Background atmosphere */}
@@ -133,57 +133,28 @@ export default function ContactCTA() {
       />
 
       <div className="container-site relative z-10">
-        <div className="max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-16">
-            <RevealOnScroll>
-              <p className="text-label mb-4">Ready for Takeoff?</p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={0.1}>
-              <h2 className="text-display-lg text-white mb-6">
-                Let us move your travel brand forward.
-              </h2>
-            </RevealOnScroll>
-            <RevealOnScroll delay={0.2}>
-              <p className="text-body-lg mx-auto text-center">
-                Share the route, campaign, event, or brand challenge you are
-                planning. The first conversation starts with context.
-              </p>
+        <div className="mx-auto max-w-6xl">
+          {/* Compact introduction, aligned to the upper right on desktop */}
+          <div className="mb-10 flex justify-end md:mb-14">
+            <RevealOnScroll className="w-full max-w-xl" direction="right">
+              <div className="border-l border-runway/40 pl-5 lg:border-l-0 lg:border-r lg:pl-0 lg:pr-6 lg:text-right">
+                <p className="text-label mb-3">Ready for Takeoff?</p>
+                <h1 className="text-3xl font-semibold leading-[1.08] tracking-[-0.035em] text-white sm:text-4xl lg:text-5xl">
+                  Let us move your travel brand forward.
+                </h1>
+                <p className="mt-4 text-sm leading-relaxed text-mist sm:text-base lg:ml-auto lg:max-w-lg">
+                  Share the route, campaign, event, or brand challenge you are
+                  planning. The first conversation starts with context.
+                </p>
+              </div>
             </RevealOnScroll>
           </div>
-
-          {/* Quick Actions */}
-          <RevealOnScroll delay={0.25}>
-            <div className="flex flex-wrap justify-center gap-4 mb-12">
-              {siteConfig.phone && (
-              <a
-                href={`tel:${siteConfig.phone.replace(/\s/g, '')}`}
-                className="inline-flex items-center gap-2 px-6 py-3 border border-line text-mist hover:text-white hover:border-mist/40 transition-all duration-300 rounded-sm text-sm"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"
-                  />
-                </svg>
-                Call {siteConfig.phone}
-              </a>
-              )}
-            </div>
-          </RevealOnScroll>
 
           {/* Contact Form */}
           <RevealOnScroll delay={0.3}>
             <form
               onSubmit={handleSubmit}
-              className="space-y-6"
+              className="max-w-5xl space-y-6"
               noValidate
             >
               {/* Honeypot */}
