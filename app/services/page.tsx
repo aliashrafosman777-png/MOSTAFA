@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   title: 'Services',
   description:
     'Travel brand strategy, campaigns, events, media production, print, and exhibition services for airlines, GSAs, and travel platforms.',
+  alternates: {
+    canonical: '/services',
+  },
 };
 
 export default function ServicesPage() {

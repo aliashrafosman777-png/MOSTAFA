@@ -5,6 +5,9 @@ import { siteConfig } from '@/content/site';
 export const metadata: Metadata = {
   title: 'Privacy & Cookies',
   description: 'How this website handles contact information, cookies, and optional analytics.',
+  alternates: {
+    canonical: '/privacy',
+  },
 };
 
 export default function PrivacyPage() {

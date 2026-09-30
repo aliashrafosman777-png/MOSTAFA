@@ -29,6 +29,9 @@ export const metadata: Metadata = {
   metadataBase: siteConfig.domain
     ? new URL(`https://${siteConfig.domain}`)
     : new URL('http://localhost:3000'),
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     title: siteConfig.title,
     description: siteConfig.description,

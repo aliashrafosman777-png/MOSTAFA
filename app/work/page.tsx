@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: 'Work',
   description:
     'Selected travel marketing projects — from airport activations and B2B platforms to airline campaigns and exhibition booths.',
+  alternates: {
+    canonical: '/work',
+  },
 };
 
 export default function WorkPage() {

@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   title: 'About',
   description:
     'Mostafa Ahmed is a marketing travel consultant with hands-on experience across global airlines, airline representation, travel networks, B2B systems, events, and campaign execution.',
+  alternates: {
+    canonical: '/about',
+  },
 };
 
 export default function AboutPage() {
