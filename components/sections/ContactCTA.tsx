@@ -136,13 +136,13 @@ export default function ContactCTA() {
         <div className="mx-auto max-w-6xl">
           {/* Compact introduction, aligned to the upper right on desktop */}
           <div className="mb-10 flex justify-end md:mb-14">
-            <RevealOnScroll className="w-full max-w-xl" direction="right">
-              <div className="border-l border-runway/40 pl-5 lg:border-l-0 lg:border-r lg:pl-0 lg:pr-6 lg:text-right">
+            <RevealOnScroll className="ml-auto w-full max-w-xl" direction="right">
+              <div className="border-r border-runway/40 pr-5 text-right sm:pr-6">
                 <p className="text-label mb-3">Ready for Takeoff?</p>
                 <h1 className="text-3xl font-semibold leading-[1.08] tracking-[-0.035em] text-white sm:text-4xl lg:text-5xl">
                   Let us move your travel brand forward.
                 </h1>
-                <p className="mt-4 text-sm leading-relaxed text-mist sm:text-base lg:ml-auto lg:max-w-lg">
+                <p className="ml-auto mt-4 max-w-lg text-sm leading-relaxed text-mist sm:text-base">
                   Share the route, campaign, event, or brand challenge you are
                   planning. The first conversation starts with context.
                 </p>
