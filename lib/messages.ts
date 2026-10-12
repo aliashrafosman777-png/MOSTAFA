@@ -158,10 +158,28 @@ async function retrieveMessage(summary: ResendEmailSummary): Promise<ContactMess
 }
 
 export async function getMessages(): Promise<ContactMessage[]> {
-  const { data, error } = await resendRequest<ResendEmailList>('/emails?limit=100');
-  if (!data) throw new Error(error || 'Unable to load messages from Resend.');
+  const emails: ResendEmailSummary[] = [];
+  let after: string | undefined;
 
-  return data.data
+  // Resend returns at most 100 emails per request. Follow the cursor so the
+  // inbox and exports include the complete retained lead history, not only
+  // the newest page.
+  for (let page = 0; page < 50; page += 1) {
+    const query = new URLSearchParams({ limit: '100' });
+    if (after) query.set('after', after);
+
+    const { data, error } = await resendRequest<ResendEmailList>(
+      `/emails?${query.toString()}`
+    );
+    if (!data) throw new Error(error || 'Unable to load messages from Resend.');
+
+    emails.push(...data.data);
+    if (!data.has_more || data.data.length === 0) break;
+    after = data.data[data.data.length - 1]?.id;
+    if (!after) break;
+  }
+
+  return emails
     .filter((email) => email.subject.startsWith(CONTACT_SUBJECT_PREFIX))
     .map((email) => {
       const summary = email.subject.slice(CONTACT_SUBJECT_PREFIX.length).trim();
@@ -187,6 +205,23 @@ export async function getMessages(): Promise<ContactMessage[]> {
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
+}
+
+export async function getDetailedMessages(): Promise<ContactMessage[]> {
+  const summaries = await getMessages();
+  const detailed: ContactMessage[] = [];
+
+  // Small batches avoid overwhelming the Resend retrieve endpoint while
+  // keeping an export responsive for a normal lead list.
+  for (let index = 0; index < summaries.length; index += 3) {
+    const batch = summaries.slice(index, index + 3);
+    const results = await Promise.all(
+      batch.map(async (summary) => (await getMessage(summary.id)) || summary)
+    );
+    detailed.push(...results);
+  }
+
+  return detailed;
 }
 
 export async function getMessage(id: string): Promise<ContactMessage | null> {

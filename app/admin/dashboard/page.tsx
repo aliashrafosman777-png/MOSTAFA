@@ -22,6 +22,7 @@ interface Message {
 const READ_KEY = 'mostafa-admin-read-message-ids';
 const ARCHIVED_KEY = 'mostafa-admin-archived-message-ids';
 const REPLIED_KEY = 'mostafa-admin-replied-message-ids';
+const NOTES_KEY = 'mostafa-admin-lead-notes';
 
 function readStringArray(key: string): string[] {
   try {
@@ -36,6 +37,20 @@ function readReplyMap(): Record<string, string> {
   try {
     const value = JSON.parse(localStorage.getItem(REPLIED_KEY) || '{}');
     return value && typeof value === 'object' ? value : {};
+  } catch {
+    return {};
+  }
+}
+
+function readNoteMap(): Record<string, string> {
+  try {
+    const value = JSON.parse(localStorage.getItem(NOTES_KEY) || '{}');
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
+    return Object.fromEntries(
+      Object.entries(value).filter(
+        (entry): entry is [string, string] => typeof entry[1] === 'string'
+      )
+    );
   } catch {
     return {};
   }
@@ -67,6 +82,20 @@ export default function AdminDashboard() {
   const [replyStatus, setReplyStatus] = useState('');
   const [sendingReply, setSendingReply] = useState(false);
   const [loadingMessageId, setLoadingMessageId] = useState<string | null>(null);
+  const [notes, setNotes] = useState<Record<string, string>>({});
+  const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({});
+  const [noteStatus, setNoteStatus] = useState<Record<string, string>>({});
+  const [exporting, setExporting] = useState(false);
+  const [exportStatus, setExportStatus] = useState('');
+
+  useEffect(() => {
+    const hydrationTimer = window.setTimeout(() => {
+      const savedNotes = readNoteMap();
+      setNotes(savedNotes);
+      setNoteDrafts(savedNotes);
+    }, 0);
+    return () => window.clearTimeout(hydrationTimer);
+  }, []);
 
   const handleInboxResponse = useCallback(
     async (response: Response) => {
@@ -189,6 +218,65 @@ export default function AdminDashboard() {
     }
   };
 
+  const saveNote = (id: string) => {
+    const value = (noteDrafts[id] || '').trim();
+    const updatedNotes = { ...notes };
+    if (value) updatedNotes[id] = value;
+    else delete updatedNotes[id];
+
+    localStorage.setItem(NOTES_KEY, JSON.stringify(updatedNotes));
+    setNotes(updatedNotes);
+    setNoteDrafts((current) => ({ ...current, [id]: value }));
+    setNoteStatus((current) => ({
+      ...current,
+      [id]: value ? 'Note saved.' : 'Note removed.',
+    }));
+  };
+
+  const exportLeads = async () => {
+    setExporting(true);
+    setExportStatus('Preparing all leads…');
+    try {
+      const response = await fetch('/api/admin/messages/export', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          readIds: readStringArray(READ_KEY),
+          repliedIds: Object.keys(readReplyMap()),
+        }),
+      });
+      if (response.status === 401) {
+        router.replace('/admin');
+        return;
+      }
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.message || 'The lead sheet could not be generated.');
+      }
+
+      const blob = await response.blob();
+      const exportedCount = response.headers.get('x-lead-count') || String(messages.length);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      const disposition = response.headers.get('content-disposition') || '';
+      const filename = disposition.match(/filename="([^"]+)"/)?.[1]
+        || `campaign-leads-${new Date().toISOString().slice(0, 10)}.csv`;
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      setExportStatus(`${exportedCount} leads exported.`);
+    } catch (exportError) {
+      setExportStatus(
+        exportError instanceof Error ? exportError.message : 'Lead export failed.'
+      );
+    } finally {
+      setExporting(false);
+    }
+  };
+
   const handleLogout = async () => {
     await fetch('/api/admin/logout', { method: 'POST' });
     router.replace('/admin');
@@ -243,12 +331,27 @@ export default function AdminDashboard() {
           ))}
         </div>
 
-        <div className="flex items-center gap-1 mb-6 border-b border-line">
+        <div className="flex flex-wrap items-center gap-1 mb-6 border-b border-line">
           {(['all', 'unread', 'read'] as const).map((value) => (
             <button key={value} onClick={() => setFilter(value)} className={`px-4 py-2.5 text-sm capitalize border-b-2 -mb-px ${filter === value ? 'text-white border-runway' : 'text-sage border-transparent hover:text-mist'}`}>{value}</button>
           ))}
-          <button onClick={refresh} disabled={loading} className="ml-auto text-xs text-sage hover:text-white p-2 disabled:opacity-50">{loading ? 'Refreshing…' : 'Refresh'}</button>
+          <div className="ml-auto flex items-center gap-2 py-1">
+            <button
+              onClick={exportLeads}
+              disabled={exporting || loading || messages.length === 0}
+              className="px-3 py-1.5 text-xs font-medium text-runway border border-runway/30 rounded-sm hover:border-runway disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {exporting ? 'Preparing sheet…' : 'Export leads'}
+            </button>
+            <button onClick={refresh} disabled={loading} className="text-xs text-sage hover:text-white p-2 disabled:opacity-50">{loading ? 'Refreshing…' : 'Refresh'}</button>
+          </div>
         </div>
+
+        {exportStatus && (
+          <p role="status" className="mb-4 text-right text-xs text-sage">
+            {exportStatus}
+          </p>
+        )}
 
         {error && <div role="alert" className="mb-6 p-4 text-sm text-red-300 border border-red-400/30 bg-red-400/10 rounded-sm">{error}</div>}
 
@@ -267,6 +370,7 @@ export default function AdminDashboard() {
                       <span className={`text-sm truncate ${message.read ? 'text-mist' : 'text-white font-semibold'}`}>{message.name}</span>
                       {message.company && <span className="text-xs text-sage truncate hidden sm:inline">— {message.company}</span>}
                       {message.repliedAt && <span className="text-[10px] uppercase tracking-wider text-runway">Replied</span>}
+                      {notes[message.id] && <span className="text-[10px] uppercase tracking-wider text-sage">Note</span>}
                     </div>
                     <p className="text-xs text-sage truncate mt-0.5">{message.message || 'Open to read this inquiry'}</p>
                   </div>
@@ -287,6 +391,44 @@ export default function AdminDashboard() {
                       <div><p className="text-xs text-sage uppercase mb-1">Received</p><p className="text-sm text-mist">{new Date(message.createdAt).toLocaleString()}</p></div>
                     </div>
                     <div className="p-4 bg-flight-950/80 border border-line rounded-sm mb-5"><p className="text-sm text-mist whitespace-pre-wrap leading-relaxed">{message.message}</p></div>
+
+                    <div className="mb-5 rounded-sm border border-line bg-obsidian/40 p-4">
+                      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                        <label htmlFor={`note-${message.id}`} className="text-xs uppercase tracking-wider text-sage">
+                          Private admin note
+                        </label>
+                        <span className="text-[10px] text-sage/70">Saved in this browser</span>
+                      </div>
+                      <textarea
+                        id={`note-${message.id}`}
+                        value={noteDrafts[message.id] || ''}
+                        onChange={(event) => {
+                          setNoteDrafts((current) => ({
+                            ...current,
+                            [message.id]: event.target.value,
+                          }));
+                          setNoteStatus((current) => ({ ...current, [message.id]: '' }));
+                        }}
+                        maxLength={2000}
+                        rows={3}
+                        placeholder="Add follow-up context, qualification details, or next steps…"
+                        className="w-full resize-y rounded-sm border border-line bg-carbon px-3 py-2.5 text-sm text-white placeholder:text-sage/50 focus:border-runway focus:outline-none"
+                      />
+                      <div className="mt-3 flex items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() => saveNote(message.id)}
+                          className="rounded-sm border border-runway/30 px-4 py-2 text-xs text-runway hover:border-runway"
+                        >
+                          Save note
+                        </button>
+                        {noteStatus[message.id] && (
+                          <p role="status" className="text-xs text-runway">
+                            {noteStatus[message.id]}
+                          </p>
+                        )}
+                      </div>
+                    </div>
 
                     {replyingId === message.id ? (
                       <form onSubmit={(event) => { event.preventDefault(); sendReply(message); }} className="space-y-4 border border-runway/20 bg-flight-950/40 p-4 rounded-sm">
