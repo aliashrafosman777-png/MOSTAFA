@@ -1,13 +1,16 @@
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { isAuthenticated } from '@/lib/auth';
+import { buildLeadWorkbook } from '@/lib/lead-workbook';
 import { getDetailedMessages } from '@/lib/messages';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 interface ExportState {
   readIds?: unknown;
   repliedIds?: unknown;
+  notes?: unknown;
 }
 
 function stringSet(value: unknown): Set<string> {
@@ -15,12 +18,13 @@ function stringSet(value: unknown): Set<string> {
   return new Set(value.filter((item): item is string => typeof item === 'string'));
 }
 
-function csvCell(value: string): string {
-  let safeValue = value.replace(/\r\n?/g, '\n');
-  // Prevent spreadsheet formulas from executing when a lead enters a value
-  // beginning with a formula character. This also preserves +phone numbers.
-  if (/^[=+\-@]/.test(safeValue)) safeValue = `'${safeValue}`;
-  return `"${safeValue.replace(/"/g, '""')}"`;
+function stringMap(value: unknown): Record<string, string> {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
+  return Object.fromEntries(
+    Object.entries(value)
+      .filter((entry): entry is [string, string] => typeof entry[1] === 'string')
+      .map(([key, note]) => [key, note.slice(0, 2000)])
+  );
 }
 
 export async function POST(request: Request) {
@@ -36,55 +40,47 @@ export async function POST(request: Request) {
     const body = (await request.json().catch(() => ({}))) as ExportState;
     const readIds = stringSet(body.readIds);
     const repliedIds = stringSet(body.repliedIds);
+    const notes = stringMap(body.notes);
     const messages = (await getDetailedMessages()).sort(
       (a, b) =>
         new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
     );
 
-    const header = [
-      'Lead ID',
-      'Date',
-      'Full Name',
-      'Phone Number',
-      'Job Position',
-      'Company Name',
-      'Status',
-      'Client Description',
-    ];
+    const workbook = await buildLeadWorkbook(
+      messages.map((message, index) => ({
+        id: `LD-${String(index + 1001).padStart(4, '0')}`,
+        createdAt: message.createdAt,
+        name: message.name,
+        phone: message.phone,
+        position: message.position,
+        company: message.company,
+        status: repliedIds.has(message.id) || readIds.has(message.id)
+          ? 'In Progress'
+          : 'New',
+        description: message.message,
+        email: message.email,
+        projectType: message.projectType,
+        note: notes[message.id] || '',
+      }))
+    );
+    const filename = `campaign-leads-${new Date().toISOString().slice(0, 10)}.xlsx`;
+    const responseBody = workbook.buffer.slice(
+      workbook.byteOffset,
+      workbook.byteOffset + workbook.byteLength
+    ) as ArrayBuffer;
 
-    const rows = messages.map((message, index) => {
-      const status = repliedIds.has(message.id) || readIds.has(message.id)
-        ? 'In Progress'
-        : 'New';
-      return [
-        `LD-${String(index + 1001).padStart(4, '0')}`,
-        new Date(message.createdAt).toISOString().slice(0, 10),
-        message.name,
-        message.phone,
-        message.position,
-        message.company,
-        status,
-        message.message,
-      ];
-    });
-
-    const csv = [header, ...rows]
-      .map((row) => row.map((value) => csvCell(String(value || ''))).join(','))
-      .join('\r\n');
-    const filename = `campaign-leads-${new Date().toISOString().slice(0, 10)}.csv`;
-
-    return new NextResponse(`\uFEFF${csv}`, {
+    return new NextResponse(responseBody, {
       headers: {
         'Cache-Control': 'no-store',
         'Content-Disposition': `attachment; filename="${filename}"`,
-        'Content-Type': 'text/csv; charset=utf-8',
+        'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'X-Lead-Count': String(messages.length),
       },
     });
   } catch (error) {
     console.error('Lead export error:', error);
     return NextResponse.json(
-      { success: false, message: 'The lead sheet could not be generated.' },
+      { success: false, message: 'The Excel lead tracker could not be generated.' },
       { status: 502 }
     );
   }

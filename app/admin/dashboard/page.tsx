@@ -243,6 +243,7 @@ export default function AdminDashboard() {
         body: JSON.stringify({
           readIds: readStringArray(READ_KEY),
           repliedIds: Object.keys(readReplyMap()),
+          notes: readNoteMap(),
         }),
       });
       if (response.status === 401) {
@@ -260,7 +261,7 @@ export default function AdminDashboard() {
       const link = document.createElement('a');
       const disposition = response.headers.get('content-disposition') || '';
       const filename = disposition.match(/filename="([^"]+)"/)?.[1]
-        || `campaign-leads-${new Date().toISOString().slice(0, 10)}.csv`;
+        || `campaign-leads-${new Date().toISOString().slice(0, 10)}.xlsx`;
       link.href = url;
       link.download = filename;
       document.body.appendChild(link);
@@ -341,7 +342,7 @@ export default function AdminDashboard() {
               disabled={exporting || loading || messages.length === 0}
               className="px-3 py-1.5 text-xs font-medium text-runway border border-runway/30 rounded-sm hover:border-runway disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {exporting ? 'Preparing sheet…' : 'Export leads'}
+              {exporting ? 'Preparing Excel…' : 'Export Excel'}
             </button>
             <button onClick={refresh} disabled={loading} className="text-xs text-sage hover:text-white p-2 disabled:opacity-50">{loading ? 'Refreshing…' : 'Refresh'}</button>
           </div>
